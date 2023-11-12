@@ -1,0 +1,131 @@
+{% extends 'base/base.html'%}
+{% load static %}
+{% block stylesheets %}
+<link href="{% static 'act/css/lista_act.css' %}" rel="stylesheet" type="text/css">
+{% endblock stylesheets %}
+
+{% block title%} Eventos {% endblock%}   
+
+{% block background %}{% static 'eve/img/even.jpg' %}{% endblock %}
+
+{% block headers %}<h1>Lista de Eventos</h1>{% endblock %}
+
+{% block content %}
+
+<div class="row ml-0 mb-3">
+    <a href="{% url 'eventos:eventos' %}">
+        <button type="button" class="btn btn-info font-weight-bold" style= "cursor: pointer;">
+            <i class="fas fa-long-arrow-alt-left mr-2"></i>
+            AGREGAR EVENTO
+        </button>
+    </a>
+</div>
+<div style="background-color: rgba(0, 0, 0, 0.1); color: #757070; padding: 10px; margin: 10px 0; font-family: Arial, sans-serif;">
+    Total de Registros: {{ eventos|length }}
+</div> 
+<div class="content-container">
+    <form method="get" action="{% url 'eventos:list_evento' %}">
+        <div class="search-bar">
+            <input type="text" name="q" class="form-control" placeholder="Buscar" value="{{ query }}" id="search-input">
+        </div>
+    </form>
+    <div id="custom-table" class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Titulo</th>
+                    <th>Invitante</th>
+                    <th>Fecha</th>
+                    <th>Encargado</th>
+                    <th>Staff</th>
+                    <th>Lugar</th>                    
+                    <th>No. Asistentes</th>
+                    <th>Tipo</th>					
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for eve in eventos %}
+                    <tr>
+                        <td>{{ eve.titulo }}</td>  
+                        <td>{{ eve.invitante }}</td>  
+                        <td>{{ eve.fecha }}</td>  
+                        <td>{{ eve.encargado }}</td> 
+                        <td>{{ eve.staff }}</td> 
+                        <td>{{ eve.lugar }}</td>  
+						<td>{{ eve.noasistentes }}</td>                           
+                        <td>{{ eve.tipo.nombre }}</td>      
+                        <td>{{ eve.estate.nombre }}</td>    
+                        <td class="acciones">
+                            <div>
+                                <a href="{% url 'eventos:evento_actuali' eve.id %}" class="btn btn-success" title="Actualizar evento">
+                                    <i class="fas fa-pen"></i> ACTUALIZAR
+                                </a>
+                                <a href="{% url 'eventos:genera_pdf_evento' eve.id %}" class="btn btn-warning" title="Descargar PDF">
+                                    Imprimir 
+                                </a>                                   
+                                <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#eliminarMiembro{{ eve.id }}">
+                                   ELIMINAR
+                                </a>
+                            </div>
+
+                            <div class="modal fade" id="eliminarMiembro{{ eve.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ eve.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">  
+                                            <h5 class="modal-title" id="exampleModalLabel{{ eve.id }}">Eliminar Evento</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Está seguro que desea eliminar el Evento: {{eve.titulo }}?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button style= "cursor: pointer;" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            <a id="updateThisURL" rel="delete" href="{% url 'eventos:eliminar_evento' eve.id %}" class="btn btn-danger text-decoration-none">Eliminar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+<script src="{% static 'tables/js/jquery-3.7.0.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('search-input');
+    const tableRows = document.querySelectorAll('.custom-table tbody tr');
+
+    searchInput.addEventListener('input', function () {
+        const query = searchInput.value.toLowerCase();
+
+        tableRows.forEach(function (row) {
+            const cells = row.querySelectorAll('td');
+            let found = false;
+
+            cells.forEach(function (cell) {
+                const cellText = cell.innerText.toLowerCase();
+                if (cellText.includes(query)) {
+                    found = true;
+                }
+            });
+
+            if (found) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock javascripts %}

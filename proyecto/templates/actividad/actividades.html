@@ -1,0 +1,53 @@
+{% extends 'base/base.html'%}
+
+{% block title%} Actividades {% endblock%}   
+
+{% block background %}{% load static %}{% static 'act/img/activi.jpg' %}{% endblock %}
+
+{% block headers %}
+<h1>Actividades</h1>
+{% endblock %}
+
+{% block content%}  
+ <!-- Proyecto -->
+	      <div class="row project">  	
+	      	<div class="col-lg-3 col-md-4 offset-lg-1">
+			      <img class="img-fluid" src="{% static 'act/img/idi.png' %}" alt="">
+	      	</div>
+	        <div class="col-lg-7 col-md-8">
+	      		<h2 class="section-heading title">Clases de Idioma</h2>   
+	          <p> Apartado para mantener un registro ordenado de los miembros que estan asignados a las distinas clases de idiomas que imparte la Comunidad Islámica Aldaawa </p>
+                <div class="row ml-0 mb-3">
+                    <a href="{% url 'actividades:lista_educativa' %}">
+                        <button   style= "cursor: pointer;" type="button" class="btn btn-info font-weight-bold">
+                            ADMINISTRAR
+                        </button>
+                    </a>
+                </div>
+                <div class="row ml-0 mb-3">
+                    <a href="{% url 'actividades:lista_noeducativa' %}">
+                        <button  style= "cursor: pointer;" type="button" class="btn btn-info font-weight-bold">
+                            (NO MIEMBROS)
+                        </button>
+                    </a>
+                </div>				
+	      	</div>
+	      </div>
+	      <!-- Proyecto -->
+	      <div class="row project">  	
+	      	<div class="col-lg-3 col-md-4 offset-lg-1">
+			      <img class="img-fluid" src="{% static 'act/img/acta.png' %}" alt="">
+	      	</div>
+	        <div class="col-lg-7 col-md-8">
+	      		<h2 class="section-heading title">Actas de Matrimonio</h2>   
+	          <p>Apartado para mantener un registro ordenado y seguro de todos los matrimonios que han tenido lugar en la Comunidad Islámica Aldaawa, posteriomente para verificar su validez si asi lo desea</p>
+                <div class="row ml-0 mb-3">
+                    <a href="{% url 'actividades:list_act' %}">
+                        <button style= "cursor: pointer;" type="button" class="btn btn-info font-weight-bold">
+                            ADMINISTRAR
+                        </button>
+                    </a>
+                </div>
+	      	</div>
+	      </div>
+{% endblock %}

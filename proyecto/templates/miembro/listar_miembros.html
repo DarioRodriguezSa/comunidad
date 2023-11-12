@@ -1,0 +1,132 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block stylesheets %}
+<link href="{% static 'mie/css/listar_miembros.css' %}" rel="stylesheet" type="text/css">
+{% endblock stylesheets %}
+
+{% block title %}Miembros{% endblock %}
+
+{% block background %}{% static 'mie/img/musulman.jpg' %}{% endblock %}
+
+{% block headers %}<h1>Lista de Miembros</h1>{% endblock %}
+
+{% block content %}
+
+<div class="row ml-0 mb-3">
+    <a href="{% url 'miembros:agregar_miembro' %}">
+        <button  style= "cursor: pointer;" type="button" class="btn btn-info font-weight-bold">
+            <i class="fas fa-long-arrow-alt-left mr-2"></i>
+            AGREGAR MIEMBRO
+        </button>
+    </a>
+</div>
+<div style="background-color: rgba(0, 0, 0, 0.1); color: #757070; padding: 10px; margin: 10px 0;">
+    Total de Registros: {{ miembros|length }}
+</div> 
+<div class="content-container">
+    <form method="get" action="{% url 'miembros:lista_miembro' %}">
+        <div class="search-bar">
+            <input type="text" name="q" class="form-control" placeholder="Buscar" value="{{ query }}" id="search-input">
+        </div>
+    </form>
+    <div id="custom-table" class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Edad</th>
+                    <th>Nacionalidad</th>
+                    <th>Estado Civil</th>
+                    <th>Género</th>
+                    <th>ID</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Correo</th>
+                    <th>No. Hijos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for miembro in miembros %}
+                    <tr>
+                        <td>{{ miembro.nombre }}</td>
+                        <td>{{ miembro.apellido }}</td>
+                        <td>{{ miembro.edad }}</td>   
+                        <td>{{ miembro.nacionalidad.nombre }}</td>
+                        <td>{{ miembro.estadocivil.nombre }}</td>
+                        <td>{{ miembro.genero.nombre }}</td>
+                        <td>{{ miembro.di }}</td>
+                        <td>{{ miembro.direccion }}</td>
+                        <td>{{ miembro.telefono }}</td>
+                        <td>{{ miembro.correo }}</td>
+                        <td>{{ miembro.nohijos }}</td>
+                        <td class="acciones">
+                            <div>
+                                <a href="{% url 'miembros:miembros_actuali' miembro.id %}" class="btn btn-success" title="Actualizar miembro">
+                                   ACTUALIZAR
+                                </a>
+                                <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#eliminarMiembro{{ miembro.id }}">
+                                   ELIMINAR
+                                </a>
+                            </div>
+
+                            <div class="modal fade" id="eliminarMiembro{{ miembro.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ miembro.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">  
+                                            <h5 class="modal-title" id="exampleModalLabel{{ miembro.id }}">Eliminar Miembro</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Está seguro que desea eliminar a: {{ miembro.nombre }}?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button style="cursor: pointer;" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            <a id="updateThisURL" rel="delete" href="{% url 'miembros:eliminar_miembro' miembro.id %}" class="btn btn-danger text-decoration-none">Eliminar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+<script src="{% static 'tables/js/jquery-3.7.0.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('search-input');
+    const tableRows = document.querySelectorAll('.custom-table tbody tr');
+
+    searchInput.addEventListener('input', function () {
+        const query = searchInput.value.toLowerCase();
+
+        tableRows.forEach(function (row) {
+            const cells = row.querySelectorAll('td');
+            let found = false;
+
+            cells.forEach(function (cell) {
+                const cellText = cell.innerText.toLowerCase();
+                if (cellText.includes(query)) {
+                    found = true;
+                }
+            });
+
+            if (found) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock javascripts %}

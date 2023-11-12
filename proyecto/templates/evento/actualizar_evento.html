@@ -1,0 +1,87 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block stylesheets %}
+<link href="{% static 'mie/css/miembros.css' %}" rel="stylesheet" type="text/css">
+{% endblock stylesheets %}
+
+{% block title %} Eventos {% endblock %}
+{% block background %}{% static 'eve/img/even.jpg' %}{% endblock %}
+
+{% block headers %}<h1>Actualizar Evento</h1>{% endblock %}
+
+{% block content %}
+<div class="member-section">
+    <div id="alert-message" style="display: none;"></div>
+
+    <form method="post" id="evento-form">
+        {% csrf_token %}
+
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="titulo">Titulo:</label>
+                <input type="text" id="titulo" name="titulo" class="form-control" value="{{ evento.titulo }}" required>
+            </div>
+            <div class="form-group">
+                <label for="invitante">Invitante:</label>
+                <input type="text" id="invitante" name="invitante" class="form-control" value="{{ evento.invitante }}" required>
+            </div>
+        </div>
+
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="fecha">Fecha:</label>
+                <input type="date" id="fecha" name="fecha" class="form-control" required value="{{ evento.fecha|date:'Y-m-d' }}">  
+            </div>
+            <div class="form-group">
+                <label for="encargado">Encargado:</label>
+                <input type="text" id="encargado" name="encargado" class="form-control" value="{{ evento.encargado }}" required>
+            </div>
+        </div>
+
+        <div class ="form-group-container">
+            <div class="form-group">
+                <label for="staff">Staff:</label>
+                <input type="text" id="staff" name="staff" class="form-control" value="{{ evento.staff }}" required>
+            </div>
+        </div>
+
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="lugar">Lugar:</label>
+                <input type="text" id="lugar" name="lugar" class="form-control" value="{{ evento.lugar }}" required>
+            </div>
+            <div class="form-group">
+                <label for="noasistentes">No. Asistentes:</label>
+                <input type="number" id="noasistentes" name="noasistentes" class="form-control" value="{{ evento.noasistentes }}" required>
+            </div>
+        </div>
+
+        <div class="form-group-container">
+            <div class="select-group" style="margin-right: auto;">
+                <label for="tipo">Tipo:</label>
+                <select id="tipo" name="tipo" class="form-control" required>
+                    <option value="" disabled>Selecciona un Tipo</option>
+                    {% for g in tipos %}
+                        <option value="{{ g.id }}" {% if g.id == evento.tipo.id %}selected{% endif %}>{{ g.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="select-group" style="margin-right: auto;">
+                <label for="estate">Estado:</label>
+                <select id="estate" name="estate" class="form-control" required>
+                    <option value="" disabled>Selecciona un Estado</option>
+                    {% for n in estates %}
+                        <option value="{{ n.id }}" {% if n.id == evento.estate.id %}selected{% endif %}>{{ n.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="button-group">
+             <button style= "cursor: pointer;" type="submit" class="btn btn-primary agregar-button">Actualizar Evento</button>
+            <a href="{% url 'eventos:list_evento' %}" class="btn btn-primary listar-button">Listar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block stylesheets %}
+<link href="{% static 'mie/css/miembros.css' %}" rel="stylesheet" type="text/css">
+{% endblock stylesheets %}
+
+{% block title %} Eventos {% endblock %}
+{% block background %}{% static 'eve/img/even.jpg' %}{% endblock %}
+
+{% block headers %}<h1>Agregar Eventos</h1>{% endblock %}
+
+{% block content %}
+<div class="member-section">
+    <div id="alert-message" style="display: none;"></div>
+
+ <form method="post" id="evento-form">
+        {% csrf_token %}
+
+        <div class="form-group-container">        
+            <div class="form-group">
+                <label for="titulo">Titulo:</label>
+                <input type="text" id="titulo" name="titulo" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="invitante">Invitante:</label>
+                <input type="text" id="invitante" name="invitante" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-group-container"> 
+            <div class="form-group">
+                <label for="fecha">Fecha:</label>
+                <input type="date" id="fecha" name="fecha" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="encargado">Encargado:</label>
+                <input type="text" id="encargado" name="encargado" class="form-control" required>
+            </div>            
+        </div>  
+
+        <div class="form-group-container"> 
+            <div class="form-group">
+                <label for="staff">Staff:</label>
+                <input type="text" id="staff" name="staff" class="form-control" required>
+            </div>          
+        </div>
+
+        <div class="form-group-container"> 
+             <div class="form-group">
+                <label for="lugar">Lugar:</label>
+                <input type="text" id="lugar" name="lugar" class="form-control" required>
+             </div>
+            <div class="form-group">
+                <label for="noasistentes">No. Asistentes:</label>
+                <input type="number" id="noasistentes" name="noasistentes" class="form-control" required>
+            </div>             
+        </div>  
+
+        <div class="form-group-container"> 
+            <div class="select-group" style="margin-right: auto; ">
+                <label for="tipo">Tipo:</label>
+                <select id="tipo" name="tipo" class="form-control" required>
+                    <option value="" disabled selected>Selecciona un Tipo</option>
+                    {% for g in tipos %}
+                        <option value="{{ g.id }}">{{ g.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>          
+            <div class="select-group" style="margin-right: auto ">
+                <label for="estate">Estado:</label>
+                <select id="nacionalidad" name="estate" class="form-control" required>
+                    <option value="" disabled selected>Selecciona un Estado</option>
+                    {% for n in estates %}
+                        <option value="{{ n.id }}">{{ n.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>        
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary agregar-button">Agregar</button>
+                <a href="{% url 'eventos:list_evento' %}" class="btn btn-primary listar-button">Listar</a>
+            </div>
+   </form>
+</div>
+{% endblock %}

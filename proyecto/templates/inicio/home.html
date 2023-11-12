@@ -1,0 +1,147 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block stylesheets %}
+<link href="{% static 'act/css/lista_act.css' %}" rel="stylesheet" type="text/css">
+{% endblock stylesheets %}
+{% block title %} Inicio {% endblock %}
+{% block background %}{% static 'inicio/img/inicio.jpg' %}{% endblock %}
+{% block headers %}<h1>Inicio</h1>{% endblock %}
+{% block content %}
+
+<div class="content-container">
+    {% if actividades_message %}
+        <div class="alert alert-warning">{{ actividades_message }}</div>
+    {% endif %}
+
+    <div id="custom-table" class="table-responsive">
+        <h2>Actividades Educativas - Miembros</h2> 
+        {% if actividades %}
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Miembro</th>
+                        <th>Categoria</th>
+                        <th>Maestro</th>
+                        <th>Clase</th>
+                        <th>Curso</th>
+                        <th>Estado</th>
+                        <th>Fecha Inicio</th>
+                        <th>Duracion</th>
+                        <th>Fecha Finalización</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for act in actividades %}
+                        <tr>
+                            <td>{{ act.miembroa.nombre }} {{ act.miembroa.apellido }}</td>  
+                            <td>{{ act.categoria.nombre }}</td> 
+                            <td>{{ act.maestro.nombre }}</td>
+                            <td>{{ act.clase.nombre }}</td>        
+                            <td>{{ act.curso.nombre }}</td>      
+                            <td style="background-color: #9df79d;" >{{ act.status.nombre }}</td>    
+                            <td>{{ act.fechainicio }}</td>
+                            <td>{{ act.duracion }} {{ act.tiempo.nombre }}</td>    
+                            <td style="background-color: #ffeda5;" >{{ act.fechafin }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No hay actividades finalizadas.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="content-container">
+    {% if noactividades_message %}
+        <div class="alert alert-warning">{{ noactividades_message }}</div>
+    {% endif %}
+
+    <div id="custom-table" class="table-responsive">
+        <h2>Actividades Educativas - No Miembros</h2> 
+        {% if noactividades %}
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Edad</th>
+                        <th>Nacionalidad</th>
+                        <th>Categoria</th>
+                        <th>Maestro</th>
+                        <th>Clase</th>                    
+                        <th>Curso</th>
+                        <th>Estado</th>
+                        <th>Fecha Inicio</th>
+                        <th>Duracion</th>
+                        <th>Fecha Finalización</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for act in noactividades %}
+                        <tr>
+                            <td>{{ act.nombre }}</td>  
+                            <td>{{ act.edad }}</td>  
+                            <td>{{ act.nacionalidade }}</td>  
+                            <td>{{ act.categoria.nombre }}</td> 
+                            <td>{{ act.maestro.nombre }}</td> 
+                            <td>{{ act.clase.nombre }}</td>                            
+                            <td>{{ act.curso.nombre }}</td>      
+                            <td style="background-color: #9df79d;" >{{ act.status.nombre }}</td>    
+                            <td>{{ act.fechainicio }}</td>
+                            <td>{{ act.duracion }} {{ act.tiempo.nombre }}</td>    
+                            <td style="background-color: #ffeda5;" >{{ act.fechafin }}</td>                       
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No hay actividades finalizadas.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="content-container">
+    {% if eventos_message %}
+        <div class="alert alert-warning">{{ eventos_message }}</div>
+    {% endif %}
+
+    <div id="custom-table" class="table-responsive">
+        <h2>Eventos</h2> 
+        {% if eventos %}
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Titulo</th>
+                        <th>Invitante</th>
+                        <th>Fecha</th>
+                        <th>Encargado</th>
+                        <th>Staff</th>
+                        <th>Lugar</th>                    
+                        <th>No. Asistentes</th>
+                        <th>Tipo</th>					
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for eve in eventos %}
+                        <tr>
+                            <td>{{ eve.titulo }}</td>  
+                            <td>{{ eve.invitante }}</td>  
+                            <td>{{ eve.fecha }}</td>  
+                            <td>{{ eve.encargado }}</td> 
+                            <td>{{ eve.staff }}</td> 
+                            <td>{{ eve.lugar }}</td>  
+                            <td>{{ eve.noasistentes }}</td>                           
+                            <td>{{ eve.tipo.nombre }}</td>      
+                            <td style="background-color: #9df79d;" >{{ eve.estate.nombre }}</td>    
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No hay eventos en proceso.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

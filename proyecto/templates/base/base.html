@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title> {% block title %}{% endblock %} |Comunidad Islámica Aldaawa</title>
+
+    <!-- Estilos y fuentes del template  -->
+  
+
+    <link href="{% static 'bas/css/clean-blog.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'bas/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'bas/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    {% block stylesheets %}{% endblock stylesheets %}
+  </head>
+
+  <body>
+
+    <!-- Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container">      
+        <a class="navbar-brand" href="{% url 'inicio:activi' %}">Comunidad Islámica Aldaawa</a>        
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menú
+          <i class="fa fa-bars"></i>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'inicio:activi' %}">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'miembros:lista_miembro' %}">Miembros</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'actividades:activi' %}">Actividades</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'eventos:list_evento' %}">Eventos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'gastos:list_gasto' %}">Gastos</a>
+            </li>           
+          </ul>                      
+        </div>       
+      </div>
+              <div>
+                <ul class="navbar-nav ml-auto">
+                  <div class="topbar-divider d-none d-sm-block"></div>
+                  <li class="nav-item dropdown no-arrow">
+                      <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{request.user.username}}</span>
+                          <img class="img-profile rounded-circle"
+                              src="{% static 'inicio/img/Customer.png' %}">
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                          aria-labelledby="userDropdown">
+                          {% comment %} <div class="dropdown-divider"></div> {% endcomment %}
+                          <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                              <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                              Cerrar Sesión
+                          </a>
+                      </div>
+                  </li>
+                </ul>
+              <div>            
+    </nav>
+     
+
+
+    <!-- Cabecera -->
+    <header class="masthead" style="background-image: url('{% block background %} {% endblock %}')">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="site-heading">
+              {% block headers %} {% endblock %}                
+            </div>
+          </div>
+        </div>
+      </div>
+     </header>
+    {% include 'base/messages.html' with messages=messages%}
+    
+    <!-- Contenido -->
+     <div class="container" style ="width: 100%;">  
+        {% block content %}{% endblock %}
+    </div>
+   
+    {% if request.path != "/" %} <hr> {% endif %}
+
+
+    <!-- Pié de página -->
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <ul class="list-inline text-center">
+              <li class="list-inline-item">
+               <p>"El camino hacia la humildad es la humillación"</p>
+                 <a href="https://acortar.link/BSXjpw" target="_blank">Soporte</a>
+              </li>
+            </ul>
+            <p class="copyright text-muted" style="font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; color: #333;">Copyright &copy; 2023 · Comunidad Islámica Aldaawa </p>          
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    {% include 'auth/logout_modal.html' %}
+    <script src="{% static 'bas/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'bas/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'bas/js/clean-blog.min.js' %}"></script>
+    {% block javascripts %}{% endblock javascripts %}
+
+
+  </body>
+
+</html>

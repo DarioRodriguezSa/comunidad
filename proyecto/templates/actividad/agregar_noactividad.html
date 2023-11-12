@@ -1,0 +1,171 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block stylesheets %}
+<link href="{% static 'mie/css/miembros.css' %}" rel="stylesheet" type="text/css">
+
+{% endblock stylesheets %}
+
+{% block title %}Actividades Educativas {% endblock %}
+{% block background %}{% static 'act/img/activi.jpg' %}{% endblock %}
+
+{% block headers %}
+<h1>No Miembros</h1>
+{% endblock %}
+{% block content %}
+<div class="member-section">
+    <div id="alert-message" style="display: none;"></div>
+
+    <form method="post" id="actividad-form">
+        {% csrf_token %}
+        <div class="form-group-container"> 
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" class="form-control" required>
+            </div>
+            <div class="select-group" style="margin-right: auto ">
+                <label for="nacionalidad">Nacionalidad:</label>
+                <select id="nacionalidad" name="nacionalidad" class="form-control" required>
+                    <option value="" disabled selected>Selecciona una nacionalidad</option>
+                    {% for n in nacionalidades %}
+                        <option value="{{ n.id }}">{{ n.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>     
+        <div class="form-group-container">      
+            <div class="form-group">
+                <label for="edad">Edad:</label>
+                <input type="number" id="edad" name="edad" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="categoria">Categoría:</label>
+                <select id="categoria" name="categoria" class="form-control" required>
+                    <option value="" disabled selected>Selecciona una Categoría</option>
+                    {% for q in categorias %}
+                        <option value="{{ q.id }}">{{ q.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>       
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="clase">Clase:</label>
+                <select id="clase" name="clase" class="form-control" required>
+                    <option value="" disabled selected>Selecciona una Clase</option>
+                    {% for p in clases %}
+                        <option value="{{ p.id }}">{{ p.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="maestro">Maestro:</label>
+                <select id="maestro" name="maestro" class="form-control" required>
+                    <option value="" disabled selected>Selecciona un Maestro</option>
+                    {% for j in maestros %}
+                        <option value="{{ j.id }}">{{ j.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>  
+
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="curso">Curso:</label>
+                <select id="curso" name="curso" class="form-control" required>
+                    <option value="" disabled selected>Selecciona un Curso</option>
+                    {% for g in cursos %}
+                        <option value="{{ g.id }}">{{ g.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="status">Estado:</label>
+                <select id="status" name="status" class="form-control" required>
+                    <option value="" disabled selected>Selecciona un Estado</option>
+                    {% for t in statuses %}
+                        <option value="{{ t.id }}">{{ t.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group-container">  
+            <div class="form-group">
+                <label for="fechainicio">Fecha de Inicio:</label>
+                <input type="date" id="fechainicio" name="fechainicio" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="duracion">Duración:</label>
+                <input type="number" id="duracion" name="duracion" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="tiempo">Tiempo:</label>
+                <select id="tiempo" name="tiempo" class="form-control" required>
+                    <option value="" disabled selected>Selecciona Un Tiempo </option>
+                    {% for z in tiempos %}
+                        <option value="{{ z.id }}">{{ z.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>  
+          
+            <div class="form-group">
+                <label for="fechafin">Fecha de Finalización:</label>
+                <input type="date" id="fechafin" name="fechafin" class="form-control" required readonly>
+            </div>
+
+        <div class="button-group">
+            <button style= "cursor: pointer;" type="submit" class="btn btn-primary agregar-button">Agregar Actividad</button>
+            <a href="{% url 'actividades:lista_noeducativa' %}" class="btn btn-primary listar-button">Listar</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+<script src="{% static 'tables/js/jquery-3.7.0.js' %}"></script>
+<script>
+   const urlGetTiempoData = "{% url 'actividades:datatime' %}"; 
+
+document.addEventListener('DOMContentLoaded', function () {
+    const duracionInput = document.getElementById('duracion');
+    const tiempoSelect = document.getElementById('tiempo');
+    const fechafinInput = document.getElementById('fechafin');
+
+    duracionInput.addEventListener('input', calculateFechaFin);
+
+    tiempoSelect.addEventListener('change', calculateFechaFin);
+
+    function calculateFechaFin() {
+        const duracion = parseFloat(duracionInput.value);
+        const tiempoId = tiempoSelect.value;
+        const fechainicio = new Date(document.getElementById('fechainicio').value);
+        
+        if (!isNaN(duracion) && tiempoId && fechainicio instanceof Date && !isNaN(fechainicio)) {
+            $.ajax({
+                url: urlGetTiempoData, // Usamos la variable que contiene la URL
+                type: 'GET',
+                data: { tiempo_id: tiempoId },
+                success: function(data) {
+                    const tiempo = data.tiempo_nombre;
+                    const fechaFin = new Date(fechainicio);
+                    if (tiempo === 'Días') {
+                        fechaFin.setDate(fechaFin.getDate() + duracion);
+                    } else if (tiempo === 'Semanas') {
+                        fechaFin.setDate(fechaFin.getDate() + duracion * 7);
+                    } else if (tiempo === 'Meses') {
+                        fechaFin.setMonth(fechaFin.getMonth() + duracion);
+                    }
+                    fechafinInput.value = fechaFin.toISOString().split('T')[0];
+                },
+                error: function() {
+                    fechafinInput.value = '';
+                }
+            });
+        } else {
+            fechafinInput.value = '';
+        }
+    }
+});
+</script>
+{% endblock javascripts %}

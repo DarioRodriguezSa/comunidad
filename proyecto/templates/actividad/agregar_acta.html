@@ -1,0 +1,64 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block stylesheets %}
+<link href="{% static 'mie/css/miembros.css' %}" rel="stylesheet" type="text/css">
+{% endblock stylesheets %}
+
+{% block title %} Actas Matrimoniales {% endblock %}
+{% block background %}{% static 'act/img/actas.jpg' %}{% endblock %}
+
+{% block headers %}<h1>Agregar Acta</h1>{% endblock %}
+
+{% block content %}
+<div class="member-section">
+    <div id="alert-message" style="display: none;"></div>
+
+ <form method="post" id="actividad-form">
+        {% csrf_token %}
+
+        <div class="form-group-container">        
+            <div class="form-group">
+                <label for="titulo">Titulo:</label>
+                <input type="text" id="titulo" name="titulo" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="fecha">Fecha:</label>
+                <input type="date" id="fecha" name="fecha" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-group-container"> 
+            <div class="form-group">
+                <label for="sheij">Sheij:</label>
+                <input type="text" id="sheij" name="sheij" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="guardian">Guardian:</label>
+                <input type="text" id="guardian" name="guardian" class="form-control" required>
+            </div>            
+        </div>  
+
+        <div class="form-group-container"> 
+            <div class="form-group">
+                <label for="novio">Novio:</label>
+                <input type="text" id="novio" name="novio" class="form-control" required>
+            </div>          
+            <div class="form-group">
+                <label for="novia">Novia:</label>
+                <input type="text" id="novia" name="novia" class="form-control" required>
+            </div>
+
+        </div>
+
+            <div class="form-group">
+                <label for="testigos">Testigos:</label>
+                <input type="text" id="testigos" name="testigos" class="form-control" required>
+            </div>
+            <div class="button-group">
+                <button style= "cursor: pointer;" type="submit" class="btn btn-primary agregar-button">Agregar</button>
+                <a href="{% url 'actividades:list_act' %}" class="btn btn-primary listar-button">Listar</a>
+            </div>
+   </form>
+</div>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'base/base.html'%}
+{% load static %}
+{% block stylesheets %}
+<link href="{% static 'act/css/lista_act.css' %}" rel="stylesheet" type="text/css">
+{% endblock stylesheets %}
+
+{% block title%} Gastos {% endblock%}   
+
+{% block background %}{% static 'gas/img/gasto.jpg' %}{% endblock %}
+
+{% block headers %}<h1>Lista de Gastos</h1>{% endblock %}
+
+{% block content %}
+
+<div class="row ml-0 mb-3">
+    <a href="{% url 'gastos:gastos' %}">
+        <button type="button" class="btn btn-info font-weight-bold" style= "cursor: pointer;">
+            <i class="fas fa-long-arrow-alt-left mr-2"></i>
+            AGREGAR GASTO
+        </button>
+    </a>
+</div>
+
+<div style="background-color: rgba(0, 0, 0, 0.1); color: #757070; padding: 10px; margin: 10px 0;">
+    Total de Registros: {{ gastos|length }}
+</div>
+<div class="content-container">
+    <form method="get" action="{% url 'gastos:list_gasto' %}">
+        <div class="search-bar">
+            <input type="text" name="q" class="form-control" placeholder="Buscar" value="{{ query }}" id="search-input">
+        </div>
+    </form>
+
+    <div id="custom-table" class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Evento</th>
+                    <th>Presupuesto</th>
+                    <th>Trasporte</th>
+                    <th>Personal</th>
+                    <th>Combustible</th>
+                    <th>Alquiler</th>                    
+                    <th>Viáticos</th>
+                    <th>Donaciones</th>					
+                    <th>Otros</th>
+                    <th>TOTAL</th> 
+                    <th>Sobrante</th>                                                      
+                    <th >Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for eve in gastos %}
+                    <tr>
+                        <td>{{ eve.eventoa.titulo }}</td>  
+                        <td style="background-color: #a9eeffb2;">Q.{{ eve.presupuesto }}</td>  
+                        <td>Q.{{ eve.transporte }}</td>  
+                        <td>Q.{{ eve.personal }}</td> 
+                        <td>Q.{{ eve.combustible }}</td> 
+                        <td>Q.{{ eve.alquiler }}</td>  
+                        <td>Q.{{ eve.viaticos }}</td>                           
+                        <td>Q.{{ eve.donaciones }}</td>  
+                        <td>Q.{{ eve.otros }}</td>  
+                        <td style="background-color: #9df79d;">Q.{{ eve.residuo }}</td>
+                        <td style="background-color: #fcfc9c">Q.{{ eve.totalgastado }}</td>
+			                                                    
+                        <td style ="max-width: 105px;" class="acciones">
+                            <div>
+                                <a href="{% url 'gastos:gastos_actuali' eve.id %}" class="btn btn-success" title="Actualizar gasto">
+                                    <i class="fas fa-pen"></i> ACTUALIZAR
+                                </a>
+                                <a href="{% url 'gastos:gastos_pdf' eve.id %}" class="btn btn-warning" title="Descargar PDF">
+                                    Imprimir 
+                                </a>                                  
+                                <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#eliminarGasto{{ eve.id }}">
+                                   ELIMINAR
+                                </a>
+                            </div>
+
+                            <div class="modal fade" id="eliminarGasto{{  eve.id  }}" tabindex="-1" aria-labelledby="exampleModalLabel{{  eve.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">  
+                                            <h5 class="modal-title" id="exampleModalLabel{{  eve.id }}">Eliminar Gasto</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Está seguro de que desea eliminar el gasto a: {{eve.eventoa.titulo}}?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button style= "cursor: pointer;" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                            <a id="updateThisURL" rel="delete" href="{% url 'gastos:eliminar_gasto' eve.id %}" class="btn btn-danger text-decoration-none">Eliminar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+<script src="{% static 'tables/js/jquery-3.7.0.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('search-input');
+    const tableRows = document.querySelectorAll('.custom-table tbody tr');
+
+    searchInput.addEventListener('input', function () {
+        const query = searchInput.value.toLowerCase();
+
+        tableRows.forEach(function (row) {
+            const cells = row.querySelectorAll('td');
+            let found = false;
+
+            cells.forEach(function (cell) {
+                const cellText = cell.innerText.toLowerCase();
+                if (cellText.includes(query)) {
+                    found = true;
+                }
+            });
+
+            if (found) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock javascripts %}

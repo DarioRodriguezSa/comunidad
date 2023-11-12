@@ -1,0 +1,135 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block stylesheets %}
+<link href="{% static 'act/css/lista_act.css' %}" rel="stylesheet" type="text/css">
+{% endblock stylesheets %}
+
+{% block title %} Actas Matrimoniales{% endblock %}
+{% block background %}{% static 'act/img/actas.jpg' %}{% endblock %}
+
+{% block headers %}<h1>Lista de Actas Matrimoniales </h1>{% endblock %}
+
+{% block content %}
+<div class="row ml-0 mb-3">
+    <a href="{% url 'actividades:activi' %}">
+        <button type="button" class="btn btn-info font-weight-bold" style= "cursor: pointer;">
+            <i class="fas fa-long-arrow-alt-left mr-2"></i>
+            VOLVER
+        </button>
+    </a>
+</div>
+<div class="row ml-0 mb-3">
+    <a href="{% url 'actividades:actas' %}">
+        <button  style= "cursor: pointer;" type="button" class="btn btn-info font-weight-bold">
+            <i class="fas fa-long-arrow-alt-left mr-2"></i>
+            AGREGAR NUEVA ACTA
+        </button>
+    </a>
+</div>
+<div style="background-color: rgba(0, 0, 0, 0.1); color: #757070; padding: 10px; margin: 10px 0;">
+    Total de Registros: {{ actas|length }}
+</div> 
+<div class="content-container">
+    <form method="get" action="{% url 'actividades:list_act' %}">
+        <div class="search-bar">
+            <input type="text" name="q" class="form-control" placeholder="Buscar" value="{{ query }}" id="search-input">
+        </div>
+    </form>    
+    <div id="custom-table" class="table-responsive">
+        <table class="custom-table">
+                    <thead>
+                    <tr>
+                        <th >Titulo</th>
+                        <th >Fecha</th>
+                        <th >Sheij</th>
+                        <th >Novio</th>
+                        <th >Novia</th>
+                        <th >Guardian</th>
+                        <th >Testigos</th>
+                        <th >Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for acta in actas %}
+                            <tr>
+                                <td>{{acta.titulo }}</td>
+                                <td>{{ acta.fecha }}</td>
+                                <td>{{ acta.sheij }}</td>   
+                                <td>{{ acta.novio }}</td>
+                                <td>{{ acta.novia }}</td>
+                                <td>{{ acta.guardian}}</td>
+                                <td>{{ acta.testigos }}</td>
+                                <td  class="acciones">
+                                    <div>
+                                        <a href="{% url 'actividades:acta_actuali' acta.id %}" class="btn btn-success" title="Actualizar acta">
+                                        ACTUALIZAR
+                                        </a>
+                                        <a href="{% url 'actividades:generar_pdf_acta' acta.id %}" class="btn btn-warning" title="Descargar PDF">
+                                           Imprimir 
+                                        </a>                                       
+                                        <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#eliminarMiembro{{acta.id }}">
+                                        ELIMINAR
+                                        </a>
+                                    </div>
+
+                                    <div class="modal fade" id="eliminarMiembro{{ acta.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ acta.id}}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">  
+                                                    <h5 class="modal-title" id="exampleModalLabel{{ acta.id }}">Eliminar Acta Matrimonial</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ¿Está seguro que desea eliminar el Acta Matrimonial: {{ acta.titulo }}?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button style="cursor: pointer;" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                                    <a id="updateThisURL" rel="delete" href="{% url 'actividades:eliminar_acta' acta.id %}" class="btn btn-danger text-decoration-none">Eliminar</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+         </table>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+<script src="{% static 'tables/js/jquery-3.7.0.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('search-input');
+    const tableRows = document.querySelectorAll('.custom-table tbody tr');
+
+    searchInput.addEventListener('input', function () {
+        const query = searchInput.value.toLowerCase();
+
+        tableRows.forEach(function (row) {
+            const cells = row.querySelectorAll('td');
+            let found = false;
+
+            cells.forEach(function (cell) {
+                const cellText = cell.innerText.toLowerCase();
+                if (cellText.includes(query)) {
+                    found = true;
+                }
+            });
+
+            if (found) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock javascripts %}
+
+

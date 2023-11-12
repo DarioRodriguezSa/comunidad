@@ -1,0 +1,98 @@
+.custom-table {
+    width: 100%;
+    max-width: 450px; /* Establece el ancho máximo de la tabla según tus necesidades */
+    border-collapse: collapse;
+    font-size: 16px;
+    background-color: #fff;
+    border: 1px solid #9bd2f7;
+    border-radius: 20px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.custom-table th,
+.custom-table td {
+    padding: 15px; /* Reduzco el padding para hacer las celdas más pequeñas */
+    text-align: center;
+    border: 1px solid #9bd2f7;
+}
+.custom-table th {
+    background-color: #79c0f0;
+    color: #616060;
+}
+.custom-table td {
+    background-color: #ffffff;
+}
+
+.acciones a {
+    padding: 2px 5px; /* Reduzco el padding para hacer los botones más pequeños */
+    font-weight: 600;
+    font-size: 12px; /* Reduzco el tamaño de fuente de los botones */
+}
+
+.acciones .btn-success {
+    background-color: #f3d250; /* Amarillo */
+    color: #757070;
+    padding: 2px 5px;
+    font-size: 12px;
+    border-radius: 20px;
+}
+
+.acciones .btn-danger {
+    background-color: #ff5252; /* Rojo */
+    color: #fff;
+    padding: 2px 5px;
+    font-size: 12px;
+    border-radius: 20px;
+}
+
+
+.acciones .btn-secondary{
+    background-color: #5a5a5a; /* Rojo */
+    color: #fff;
+    padding: 2px 5px;
+    font-size: 12px;
+    border-radius: 20px;
+}
+
+
+.acciones a:hover {
+    opacity: 0.8;
+}
+
+
+.content-container {
+    background-color: #f2f2f2; /* Color de fondo para el espacio mediano */
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 100%; /* Establece el ancho fijo del cuadro contenedor */
+    height: 400px; /* Establece la altura fija del cuadro contenedor */
+    overflow: auto; /* Agrega barras de desplazamiento automáticamente cuando sea necesario */
+}
+
+.custom-table {
+    width: 100%; /* La tabla se extenderá automáticamente al ancho del cuadro contenedor */
+}
+
+
+.content-container {
+    /* ... tus estilos actuales ... */
+    /* Agrega esta propiedad para que el contenido ocupe toda la altura disponible */
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    /* Ajusta el espaciado si es necesario */
+    padding: 0;
+}
+
+
+.container > * {
+    flex-grow: 1;
+}
+
+.container {
+    align-items: center; 
+}

@@ -1,0 +1,174 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block stylesheets %}
+<link href="{% static 'mie/css/miembros.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'act/css/lista_act.css' %}" rel="stylesheet" type="text/css">
+{% endblock stylesheets %}
+
+{% block title %} Gastos {% endblock %}
+
+{% block background %}{% static 'gas/img/gasto.jpg' %}{% endblock %}
+
+{% block headers %}<h1>Actualizar Gasto</h1>{% endblock %}
+
+{% block content %}
+<div class="member-section">
+    <div id="alert-message" style="display: none;"></div>
+
+    <form method="post" id="gasto-form">
+        {% csrf_token %}
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="evento">Evento:</label>
+                <select id="evento" name="evento" class="form-control" required readonly>
+                    {% for e in eventos %}
+                        <option value="{{ e.id }}" {% if e.id == gasto.eventoa.id %}selected{% endif %}>{{ e.titulo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="presupuesto">PRESUPUESTO:</label>
+                <div class="input-with-prefix">
+                    <span class="currency-symbol">Q.</span>
+                    <input type="text" id="presupuesto" name="presupuesto" class="form-control" value="{{ gasto.presupuesto }}" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="transporte">Trasnporte:</label>
+                <div class="input-with-prefix">
+                    <span class="currency-symbol">Q.</span>
+                    <input type="text" id="transporte" name="transporte" class="form-control" value="{{ gasto.transporte }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="personal">Personal:</label>
+                <div class="input-with-prefix">
+                    <span class="currency-symbol">Q.</span>
+                    <input type="text" id="personal" name= "personal" class="form-control" value="{{ gasto.personal }}" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="combustible">Combustible:</label>
+                <div class="input-with-prefix">
+                    <span class="currency-symbol">Q.</span>
+                    <input type="text" id="combustible" name="combustible" class="form-control" value="{{ gasto.combustible }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="alquiler">Alquiler:</label>
+                <div class="input-with-prefix">
+                    <span class="currency-symbol">Q.</span>
+                    <input type="text" id="alquiler" name="alquiler" class="form-control" value="{{ gasto.alquiler }}" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="viaticos">Viaticos:</label>
+                <div class="input-with-prefix">
+                    <span class="currency-symbol">Q.</span>
+                    <input type="text" id="viaticos" name="viaticos" class="form-control" value="{{ gasto.viaticos }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="donaciones">Donaciones:</label>
+                <div class="input-with-prefix">
+                    <span class="currency-symbol">Q.</span>
+                    <input type="text" id="donaciones" name="donaciones" class="form-control" value="{{ gasto.donaciones }}" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="otros">Otros:</label>
+                <div class="input-with-prefix">
+                    <span class="currency-symbol">Q.</span>
+                    <input type="text" id="otros" name="otros" class="form-control" value="{{ gasto.otros }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="totalgastado">TOTAL GASTADO:</label>
+                <div class="input-with-prefix">
+                    <span class="currency-symbol">Q.</span>
+                    <input type="text" id="totalgastado" name="totalgastado" class="form-control" value="{{ gasto.totalgastado }}" required readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="residuo">SOBRANTE:</label>
+                <div class="input-with-prefix">
+                    <span class="currency-symbol">Q.</span>
+                    <input type="text" id="residuo" name="residuo" class="form-control" value="{{ gasto.residuo }}" required readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+             <button style= "cursor: pointer;" type="submit" class="btn btn-primary agregar-button">Actualizar Gasto</button>
+            <a href="{% url 'gastos:list_gasto' %}" class="btn btn-primary listar-button">Listar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block javascripts %}
+<script src="{% static 'tables/js/jquery-3.7.0.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Obtén referencias a los campos de entrada necesarios
+    const presupuestoInput = document.getElementById('presupuesto');
+    const gastoInputs = [
+        document.getElementById('transporte'),
+        document.getElementById('personal'),
+        document.getElementById('combustible'),
+        document.getElementById('alquiler'),
+        document.getElementById('viaticos'),
+        document.getElementById('donaciones'),
+        document.getElementById('otros')
+    ];
+    const totalGastadoInput = document.getElementById('totalgastado');
+    const residuoInput = document.getElementById('residuo');
+
+    // Agrega un evento de escucha a cada campo de entrada de gasto para actualizar el total
+    gastoInputs.forEach(function (input) {
+        input.addEventListener('input', calcularTotalYSobrante);
+    });
+
+    // Agrega un evento de escucha al campo de presupuesto para calcular el total y el sobrante
+    presupuestoInput.addEventListener('input', calcularTotalYSobrante);
+
+    function calcularTotalYSobrante() {
+        // Parsea el presupuesto y los gastos a números
+        const presupuesto = parseFloat(presupuestoInput.value) || 0;
+        const gastos = gastoInputs.reduce(function (total, input) {
+            const valor = parseFloat(input.value) || 0;
+            return total + valor;
+        }, 0);
+
+        // Calcula el total y el sobrante
+         // Calcula el total y el sobrante
+            const total = gastos.toFixed(2); // Redondea el total a 2 decimales
+            const residuo = (presupuesto - gastos).toFixed(2); 
+        // Actualiza los campos de salida con los resultados
+             totalGastadoInput.value = total;
+             residuoInput.value = residuo;
+
+        // Cambia el color del sobrante si el presupuesto se ha sobrepasado
+        if (residuo < 0) {
+            residuoInput.style.color = 'red';
+        } else {
+            residuoInput.style.color = 'black';
+        }
+    }
+
+    // Llama a la función de cálculo al cargar la página
+    calcularTotalYSobrante();
+});
+</script>
+{% endblock javascripts %}

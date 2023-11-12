@@ -1,0 +1,105 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block stylesheets %}
+<link href="{% static 'mie/css/miembros.css' %}" rel="stylesheet" type="text/css">
+{% endblock stylesheets %}
+{% block title %} Actualizar Miembro {% endblock %}
+{% block background %}{% static 'mie/img/musulman.jpg' %}{% endblock %}
+
+{% block headers %}
+<h1>Actualizar Miembro</h1>
+{% endblock %}
+
+{% block content %}
+<div class="member-section">
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="nombre">Nombres:</label>
+                <input type="text" id="nombre" name="nombre" class="form-control" required value="{{ miembro.nombre }}">
+            </div>
+            <div class="form-group">
+                <label for="apellidos">Apellidos:</label>
+                <input type="text" id="apellidos" name="apellidos" class="form-control" required value="{{ miembro.apellido }}">
+            </div>
+        </div>
+
+        <div class="form-group-container">
+            <div class="select-group" style="margin-right: auto;">
+                <label for="estadocivil">Estado Civil:</label>
+                <select id="estadocivil" name="estadocivil" class="form-control" required>
+                    <option value="" disabled selected>Selecciona un estado civil</option>
+                    {% for estadocivil in estadosciviles %}
+                        <option value="{{ estadocivil.id }}" {% if estadocivil.id == miembro.estadocivil.id %}selected{% endif %}>
+                            {{ estadocivil.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="select-group" style="margin-right: auto;">
+                <label for="genero">Género:</label>
+                <select id="genero" name="genero" class="form-control" required>
+                    <option value="" disabled selected>Selecciona un género</option>
+                    {% for g in generos %}
+                        <option value="{{ g.id }}" {% if g.id == miembro.genero.id %}selected{% endif %}>
+                            {{ g.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="select-group" style="margin-right: auto;">
+                <label for="nacionalidad">Nacionalidad:</label>
+                <select id="nacionalidad" name="nacionalidad" class="form-control" required>
+                    <option value="" disabled selected>Selecciona una nacionalidad</option>
+                    {% for nacionalidad in nacionalidades %}
+                        <option value="{{ nacionalidad.id }}" {% if nacionalidad.id == miembro.nacionalidad.id %}selected{% endif %}>
+                            {{ nacionalidad.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="edad">Edad:</label>
+                <input type="number" id="edad" name="edad" class="form-control" required value="{{ miembro.edad }}">
+            </div>
+            <div class="form-group">
+                <label for="id">ID:</label>
+                <input type="text" id="id" name="id" class="form-control" required value="{{ miembro.di }}">
+            </div>
+        </div>
+
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="telefono">Teléfono:</label>
+                <input type="number" id="telefono" name="telefono" class="form-control" required value="{{ miembro.telefono }}">
+            </div>
+            <div class="form-group">
+                <label for="correo">Correo:</label>
+                <input type="email" id="correo" name="correo" class "form-control" required value="{{ miembro.correo }}">
+            </div>
+        </div>
+
+        <div class="form-group-container">
+            <div class="form-group">
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" name="direccion" class="form-control" required value="{{ miembro.direccion }}">
+            </div>
+            <div class="form-group">
+                <label for="num_hijos">No.Hijos:</label>
+                <input type="number" id="num_hijos" name="num_hijos" class="form-control" required value="{{ miembro.nohijos }}">
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button style= "cursor: pointer;"  type="submit" class="btn btn-primary agregar-button">ACTUALIZAR</button>
+            <a href="{% url 'miembros:lista_miembro' %}" class="btn btn-primary listar-button">Listar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
